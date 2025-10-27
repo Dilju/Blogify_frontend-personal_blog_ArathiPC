@@ -13,18 +13,26 @@ export interface PostCardProps {
 }
 
 export default function PostCard({ post }: PostCardProps) {
-  // Use excerpt if available, otherwise generate one from content
+  // ✅ Use excerpt if available, otherwise generate one from content
   const excerpt = post.excerpt
     ? post.excerpt
     : post.content
     ? post.content.slice(0, 120).trim() + (post.content.length > 120 ? "..." : "")
     : "";
 
+  // ✅ Use environment variable for image base URL
+  const mediaBase = import.meta.env.VITE_MEDIA_URL || "http://localhost:5000";
+
+  // ✅ Build full image URL safely
+  const imageSrc = post.imageUrl
+    ? `${mediaBase}${post.imageUrl.startsWith("/") ? post.imageUrl : `/${post.imageUrl}`}`
+    : null;
+
   return (
     <article className="bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden border border-gray-200">
-      {post.imageUrl && (
+      {imageSrc && (
         <img
-          src={`http://localhost:5000${post.imageUrl}`} 
+          src={imageSrc}
           alt={post.title}
           className="w-full h-48 object-cover"
         />
@@ -38,7 +46,6 @@ export default function PostCard({ post }: PostCardProps) {
         <p className="text-gray-600 line-clamp-3 mb-4">{excerpt}</p>
 
         <div className="flex justify-between items-center text-sm text-gray-500">
-          
           <span>{new Date(post.createdAt).toLocaleDateString()}</span>
         </div>
 
