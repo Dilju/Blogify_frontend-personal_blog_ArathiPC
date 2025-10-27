@@ -20,8 +20,11 @@ export default function PostCard({ post }: PostCardProps) {
     ? post.content.slice(0, 120).trim() + (post.content.length > 120 ? "..." : "")
     : "";
 
-  // ✅ Use environment variable for image base URL
-  const mediaBase = import.meta.env.VITE_MEDIA_URL || "http://localhost:5000";
+  // ✅ Dynamically choose media base (for production or local)
+  const isProd = import.meta.env.PROD;
+  const mediaBase = isProd
+    ? import.meta.env.VITE_MEDIA_URL || "https://blogify-backend-personal-blog-arathipc.onrender.com"
+    : "http://localhost:5000";
 
   // ✅ Build full image URL safely
   const imageSrc = post.imageUrl
@@ -35,6 +38,11 @@ export default function PostCard({ post }: PostCardProps) {
           src={imageSrc}
           alt={post.title}
           className="w-full h-48 object-cover"
+          onError={(e) => {
+            // ✅ Optional: fallback to placeholder if image missing
+            (e.target as HTMLImageElement).src =
+              "https://via.placeholder.com/600x400?text=Image+Not+Available";
+          }}
         />
       )}
 
