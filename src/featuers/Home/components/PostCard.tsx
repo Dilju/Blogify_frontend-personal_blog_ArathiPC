@@ -22,6 +22,7 @@ export default function PostCard({ post }: PostCardProps) {
 
   // ✅ Dynamically choose media base (production or local)
   const isProd = import.meta.env.PROD;
+  
   const mediaBase = isProd
     ? import.meta.env.VITE_MEDIA_URL || "https://blogify-backend-personal-blog-arathipc.onrender.com"
     : "http://localhost:5000";
